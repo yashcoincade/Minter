@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('./raju1.jpg');
+    background-size: auto;
+  }
+
+h1{
+    color: white;
+    text-align: center;
+}
+.container{
+    text-align: center;
+}
+#sub{
+    margin: 10px;
+}
+#add{
+    margin: 10px;
+}
+
+#mint{
+    margin: 5px;
+
+}
+
+span{
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
