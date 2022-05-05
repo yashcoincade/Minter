@@ -1,9 +1,9 @@
 /* Moralis init code */
-const serverUrl = "https://erqncsglvhlj.usemoralis.com:2053/server";
-const appId = "fOtRalpIawZSov3mH68ZxecXYjYqNhacRxGICSh0";
+const serverUrl = "https://6siqamvvvufw.usemoralis.com:2053/server";
+const appId = "AB271JeksVtFvgw6WROPaSRpdJNWfzI7HTSYbOFI";
 Moralis.start({ serverUrl, appId });
 
-const CONTRACTADDRESS= "0x092dC264a696c4c15731F130065281b53E590af2";
+const CONTRACTADDRESS= "0xB9bfA423D3836Bf84aD93835BA64353E4641d7E8";
 const ABI = [
 	{
 		"inputs": [
@@ -866,7 +866,101 @@ decrementer.addEventListener('click', function (){
 	if(result != "undefined"){
 		alert("Congrats, Minting your NFT");
 	}
+	
   }
+
+  async function mintSavage(){
+    const web3 = await Moralis.enableWeb3({ provider: "walletconnect", 
+	mobileLinks: [
+	  "metamask",
+	  "trust",
+	]  });
+    // sending 0.1 ETH
+    let options= {
+        contractAddress: CONTRACTADDRESS,
+        functionName: "mint",
+        abi: ABI,
+        params: {
+            _mintAmount: counter
+        },
+        msgValue: counter * Moralis.Units.ETH("0.01")
+    }
+    const transaction = await Moralis.executeFunction(options);
+    console.log(transaction.hash);
+	alert("Minting, Please Wait...");
+
+    const result = await transaction.wait();
+	console.log(result);
+	if(result != "undefined"){
+		alert("Congrats, Minting your NFT");
+	}
+	
+  }
+
+  async function mintMobile(){
+	const user = await Moralis.authenticate({ 
+		provider: "walletconnect", 
+		mobileLinks: [
+		  "metamask",
+		  "trust",
+		] 
+	});
+	console.log(user);
+
+    const web3 = await Moralis.enableWeb3({ 
+		provider: "walletconnect", 
+		mobileLinks: [
+		  "metamask",
+		  "trust",
+		] 
+	 });
+    // sending 0.1 ETH
+	console.log((user !== undefined));
+	if(user !== undefined){
+		console.log("if triggered");
+		let options= {
+			contractAddress: CONTRACTADDRESS,
+			functionName: "mint",
+			abi: ABI,
+			params: {
+				_mintAmount: counter
+			},
+			msgValue: counter * Moralis.Units.ETH("0.01")
+		}
+		const transaction = await Moralis.executeFunction(options);
+		console.log(transaction.hash);
+		alert("Minting, Please Wait...");
+	
+		const result = await transaction.wait();
+		console.log(result);
+		if(result != "undefined"){
+			alert("Congrats, Minting your NFT");
+		}
+	}
+	
+  }
+
+  async function getUserNFTs(){
+	const web3 = await Moralis.enableWeb3({ });
+	const options = {
+		chain: "mumbai",
+		// address: "0x75e3e9c92162e62000425c98769965a76c2e387a",
+		token_address: CONTRACTADDRESS,
+	  };
+	  const polygonNFTs = await Moralis.Web3API.account.getNFTsForContract(options);
+	  console.log(polygonNFTs);
+}
+
+async function getTotalNFTs(){
+	// const web3 = await Moralis.enableWeb3({ });
+	const options = { address: CONTRACTADDRESS, chain: "mumbai" };
+	const NFTs = await Moralis.Web3API.token.getAllTokenIds(options);
+	console.log(NFTs);
+}
 
 
 document.getElementById("mint").onclick = mint;
+document.getElementById("mintMobile").onclick = mintMobile;
+document.getElementById("mintSavage").onclick = mintSavage;
+document.getElementById("getNFT").onclick = getUserNFTs;
+document.getElementById("getTotalNFTs").onclick = getTotalNFTs;
